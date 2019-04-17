@@ -1,0 +1,167 @@
+---
+name: vertical scroll
+---
+
+import { useState } from 'react';
+import { Playground, Props } from 'docz';
+import { WindowGrid } from '../src/core';
+
+# Use Cases
+
+## scrollHeight < clientHeight
+
+### shrink
+
+<WindowGrid
+  height={300}
+  rowCount={5}
+  rowHeight={30}
+  columnCount={5}
+  columnWidth={100}
+  fixedTopCount={2}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={2}
+  overscanCount={2}
+  fillerColumn='append'
+  fillerRow='append'
+>
+{({ columnIndex, rowIndex, style }) => (
+  <div className="cell" style={style}>
+    {rowIndex} , {columnIndex}
+  </div>
+)}
+</WindowGrid>
+
+<br/>
+
+<!--WindowGrid
+  height={300}
+  rowCount={5}
+  rowHeight={30}
+  columnCount={100}
+  columnWidth={100}
+  fixedTopCount={2}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={2}
+  overscanCount={2}
+  fillerRow='none'
+  
+>
+{({ columnIndex, rowIndex, style }) => (
+  <div className="cell" style={style}>
+    {rowIndex} , {columnIndex}
+  </div>
+)}
+</WindowGrid>
+
+### dummy 열 추가
+
+<!--WindowGrid
+  height={300}
+  rowCount={100}
+  rowHeight={30}
+  columnCount={5}
+  columnWidth={100}
+  fixedTopCount={2}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={4}
+  overscanCount={2}
+  fillerColumn={true}
+>
+{({ columnIndex, rowIndex, style }) => (
+  <div className="cell" style={style}>
+    {rowIndex} , {columnIndex}
+  </div>
+)}
+</WindowGrid>
+
+### 마지막 열의 너비를 늘임
+
+<WindowGrid
+  height={300}
+  rowCount={5}
+  rowHeight={30}
+  columnCount={100}
+  columnWidth={100}
+  fixedTopCount={2}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={4}
+  overscanCount={2}
+  fillerColumn='stretch'
+>
+{({ columnIndex, rowIndex, style }) => (
+  <div className="cell" style={style}>
+    {rowIndex} , {columnIndex}
+  </div>
+)}
+</WindowGrid>
+
+### 비워둠 none
+
+<WindowGrid
+  height={300}
+  rowCount={100}
+  rowHeight={30}
+  columnCount={5}
+  columnWidth={100}
+  fixedTopCount={2}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={4}
+  overscanCount={2}
+  fillerColumn='none'
+>
+{({ columnIndex, rowIndex, style }) => (
+  <div className="cell" style={style}>
+    
+    {(rowIndex === -1 || columnIndex === -1) ? null : rowIndex + ' , ' + columnIndex}
+  </div>
+)}
+</WindowGrid>
+
+## scrollHeight < clientHeight
+
+<!--WindowGrid
+  height={200}
+  rowCount={5}
+  rowHeight={30}
+  columnCount={100}
+  columnWidth={100}
+  fixedTopCount={1}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={1}
+  overscanCount={0}
+>
+{({ columnIndex, rowIndex, style }) => (
+  <div className="cell" style={style}>
+    {rowIndex} , {columnIndex}
+  </div>
+)}
+</WindowGrid-->
+
+## Basic usage
+
+<!--WindowGrid
+  height={300}
+  rowCount={5}
+  rowHeight={30}
+  columnCount={5}
+  columnWidth={100}
+  fixedTopCount={1}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={1}
+  overscanCount={0}
+>
+{({ columnIndex, rowIndex, style }) => (
+  <div className="cell" style={style}>
+    {rowIndex} , {columnIndex}
+  </div>
+)}
+</WindowGrid-->
+
