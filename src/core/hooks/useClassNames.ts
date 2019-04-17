@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { any } from 'prop-types';
 
 export type ClassNamesProps = {
   CELL?: string;
