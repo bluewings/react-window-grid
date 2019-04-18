@@ -8,12 +8,14 @@ import {
   useHelpers,
   useContainerInfo,
   useScrollbarSize,
+  useScrollHelper,
   useSections,
   useTheme,
 } from '../../hooks';
 import { ItemType, ScrollDirection } from '../../hooks/useHelpers';
 import { ClassNames } from '../../hooks/useClassNames';
 import { ThemeFunction } from '../../hooks/useTheme';
+import { closestGridOffset } from '../../hooks/useScrollHelper';
 
 import styles from './WindowGrid.module.scss';
 
@@ -47,6 +49,8 @@ type WindowGridProps = {
   classNames?: ClassNames;
   theme?: ThemeFunction;
 
+  fitToGrid?: boolean;
+
   // maxScrollY?: number
   // maxScrollX?: number
 
@@ -73,6 +77,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
     horizontalScrollDirection: ScrollDirection.FORWARD,
   });
 
+  const scrollHelper = useScrollHelper();
+
   const timeoutID = useRef<NodeJS.Timeout>();
   const handleScroll = (event: ScrollEvent) => {
     timeoutID.current && clearTimeout(timeoutID.current);
@@ -85,7 +91,16 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
       horizontalScrollDirection: scrollLeft > nextScrollLeft ? ScrollDirection.BACKWARD : ScrollDirection.FORWARD,
     };
     setScroll(scroll);
-    timeoutID.current = setTimeout(() => setScroll({ ...scroll, isScrolling: false }), IS_SCROLLING_DEBOUNCE_INTERVAL);
+    scrollHelper.check(nextScrollLeft, nextScrollTop);
+    timeoutID.current = setTimeout(() => {
+      setScroll({ ...scroll, isScrolling: false });
+      if (props.fitToGrid && !scrollHelper.isScrolling() && misc.current) {
+        scrollHelper.scrollTo({
+          x: closestGridOffset(ItemType.COLUMN, misc.current),
+          y: closestGridOffset(ItemType.ROW, misc.current),
+        });
+      }
+    }, IS_SCROLLING_DEBOUNCE_INTERVAL);
   };
 
   useEffect(() => () => timeoutID.current && clearTimeout(timeoutID.current), []);
@@ -129,8 +144,16 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
 
   const { getItemMetadata, getRange } = helpers;
 
-  const [rowStartIndex, rowStopIndex] = getRange(ItemType.ROW, scrollTop, verticalScrollDirection);
-  const [columnStartIndex, columnStopIndex] = getRange(ItemType.COLUMN, scrollLeft, horizontalScrollDirection);
+  const [overscanRowStartIndex, overscanRowStopIndex, visibleRowStartIndex, visibleRowStopIndex] = getRange(
+    ItemType.ROW,
+    scrollTop,
+    verticalScrollDirection,
+  );
+  const [overscanColumnStartIndex, overscanColumnStopIndex, visibleColumnStartIndex, visibleColumnStopIndex] = getRange(
+    ItemType.COLUMN,
+    scrollLeft,
+    horizontalScrollDirection,
+  );
 
   const getCachedStyle = useCachedItem({
     getItemMetadata,
@@ -145,15 +168,37 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
   const { center, sections } = useSections(
     rowMetadata,
     columnMetadata,
-    rowStartIndex,
-    rowStopIndex,
-    columnStartIndex,
-    columnStopIndex,
+    overscanRowStartIndex,
+    overscanRowStopIndex,
+    overscanColumnStartIndex,
+    overscanColumnStopIndex,
     clientWidth,
     clientHeight,
     getCachedStyle,
     classNames,
   );
+
+  const misc = useRef<any>();
+  misc.current = {
+    clientHeight,
+    clientWidth,
+    columnCount,
+    fixedBottomCount: props.fixedBottomCount,
+    fixedRightCount: props.fixedRightCount,
+    getItemMetadata,
+    horizontalScrollDirection,
+    rowCount,
+    scrollHeight,
+    scrollLeft,
+    scrollTop,
+    scrollWidth,
+    sections,
+    verticalScrollDirection,
+    visibleColumnStartIndex,
+    visibleColumnStopIndex,
+    visibleRowStartIndex,
+    visibleRowStopIndex,
+  };
 
   const guidelines = useGuidelines(rowMetadata, columnMetadata, clientWidth, clientHeight, classNames);
 
@@ -189,7 +234,12 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
     <div ref={containerInfo.ref} className={containerInfo.className} style={{ width: containerInfo.offsetWidth }}>
       {/* <pre>{JSON.stringify({ scrollTop, scrollLeft, clientHeight, scrollHeight })}</pre> */}
       <div className={statusClassName}>
-        <div style={{ width: innerWidth, height: innerHeight }} className={styles.root} onScroll={handleScroll}>
+        <div
+          ref={scrollHelper.target}
+          style={{ width: innerWidth, height: innerHeight }}
+          className={styles.root}
+          onScroll={handleScroll}
+        >
           <div style={{ width: scrollWidth, height: scrollHeight }}>
             {sections.map((section) => (
               <div key={section.key} className={section.className} style={section.style}>

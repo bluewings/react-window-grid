@@ -5,6 +5,7 @@ import useHelpers from './useHelpers';
 import useMetadata from './useMetadata';
 import useContainerInfo from './useContainerInfo';
 import useScrollbarSize from './useScrollbarSize';
+import useScrollHelper from './useScrollHelper';
 import useSections from './useSections';
 import useTheme from './useTheme';
 
@@ -16,6 +17,7 @@ export {
   useMetadata,
   useContainerInfo,
   useScrollbarSize,
+  useScrollHelper,
   useSections,
   useTheme,
 };

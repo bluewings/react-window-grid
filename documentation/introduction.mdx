@@ -6,52 +6,16 @@ route: /
 import { useState } from 'react';
 import { Props } from 'docz';
 import { Playground } from './resources';
-import { WindowGrid } from '../src/core';
+// import { WindowGrid } from '../src/core';
 import mona from './resources/assets/mona.jpg';
 import useImage from './resources/hooks/useImage';
+import WindowGrid from './resources/WindowGridStyled';
 
 # Introduction
 
 <Props of={WindowGrid} />
 
 [Currently, the Props component is not working.](https://github.com/pedronauck/docz/issues/717)
-
-## image to WindowGrid
-
-<Playground>
-{() => {
-
-  
-  const { w, h, data } = useImage(mona, 50);
-
-  const Cell = ({ rowIndex, columnIndex, className, style }) => (
-      <div className={className} style={{ ...style,  }}>
-        <div style={{ width: '80%', height: '80%', borderRadius: '50%', background: data[rowIndex][columnIndex].rgb }} />
-        
-      </div>
-    );
-
-    
-  
-
-  return w && h && (
-    <div>
-      <img src={mona} width='200' />
-    <WindowGrid
-      height={400}
-      columnCount={w}
-      columnWidth={20}
-      rowCount={h}
-      rowHeight={20}
-      overscanCount={3}
-      >
-      {Cell}
-    </WindowGrid>
-    </div>
-  );
-
-}}
-</Playground>
 
 
 
@@ -215,3 +179,41 @@ return (
 
 
 ## Themes
+
+## image to WindowGrid
+
+<Playground>
+{() => {
+
+  
+  const { w, h, data } = useImage(mona, 50);
+
+  const Cell = ({ rowIndex, columnIndex, className, style }) => (
+      <div className={className} style={{ ...style,  }}>
+        <div style={{ width: '80%', height: '80%', borderRadius: '50%', background: data[rowIndex][columnIndex].rgb }} />
+        
+      </div>
+    );
+
+    
+  
+
+  return w && h && (
+    <div>
+      <img src={mona} width='200' />
+    <WindowGrid
+      height={400}
+      columnCount={w}
+      columnWidth={20}
+      rowCount={h}
+      rowHeight={20}
+      overscanCount={3}
+      >
+      {Cell}
+    </WindowGrid>
+    </div>
+  );
+
+}}
+</Playground>
+

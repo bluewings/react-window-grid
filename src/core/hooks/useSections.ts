@@ -3,29 +3,29 @@ import { Metadata, ItemPosition } from './useMetadata';
 import styles from '../components/WindowGrid/WindowGrid.module.scss';
 
 function useItems(rowRange: number[], colRange: number[], getCachedStyle: Function) {
-  const [rowStartIndex, rowStopIndex] = rowRange;
-  const [columnStartIndex, columnStopIndex] = colRange;
+  const [overscanRowStartIndex, overscanRowStopIndex] = rowRange;
+  const [overscanColumnStartIndex, overscanColumnStopIndex] = colRange;
   return useMemo(() => {
     // const
 
     const items = [];
 
-    for (let rowIndex = rowStartIndex; rowIndex < rowStopIndex; rowIndex++) {
+    for (let rowIndex = overscanRowStartIndex; rowIndex < overscanRowStopIndex; rowIndex++) {
       let rowType = [];
-      if (rowIndex === rowStartIndex) {
+      if (rowIndex === overscanRowStartIndex) {
         rowType.push('first');
       }
-      if (rowIndex === rowStopIndex - 1) {
+      if (rowIndex === overscanRowStopIndex - 1) {
         rowType.push('last');
       }
-      for (let colIndex = columnStartIndex; colIndex < columnStopIndex; colIndex++) {
+      for (let colIndex = overscanColumnStartIndex; colIndex < overscanColumnStopIndex; colIndex++) {
         const key = rowIndex + '_' + colIndex;
 
         let colType = [];
-        if (colIndex === columnStartIndex) {
+        if (colIndex === overscanColumnStartIndex) {
           colType.push('first');
         }
-        if (colIndex === columnStopIndex - 1) {
+        if (colIndex === overscanColumnStopIndex - 1) {
           colType.push('last');
         }
         const { content, style } = getCachedStyle(rowIndex, colIndex, rowType, colType);
@@ -39,16 +39,16 @@ function useItems(rowRange: number[], colRange: number[], getCachedStyle: Functi
       }
     }
     return items;
-  }, [rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, getCachedStyle]);
+  }, [overscanRowStartIndex, overscanRowStopIndex, overscanColumnStartIndex, overscanColumnStopIndex, getCachedStyle]);
 }
 
 function useSections(
   rowMetadata: Metadata,
   columnMetadata: Metadata,
-  rowStartIndex: number,
-  rowStopIndex: number,
-  columnStartIndex: number,
-  columnStopIndex: number,
+  overscanRowStartIndex: number,
+  overscanRowStopIndex: number,
+  overscanColumnStartIndex: number,
+  overscanColumnStopIndex: number,
   contentWidth: number,
   contentHeight: number,
   getCachedStyle: Function,
@@ -59,15 +59,18 @@ function useSections(
     bottom: rowMetadata.post.range,
     left: columnMetadata.pre.range,
     right: columnMetadata.post.range,
-    // middle_v: [rowStartIndex, rowStopIndex + 1],
-    middle_v: [Math.max(rowMetadata.mid.range[0], rowStartIndex), Math.min(rowMetadata.mid.range[1], rowStopIndex + 1)],
+    // middle_v: [overscanRowStartIndex, overscanRowStopIndex + 1],
+    middle_v: [
+      Math.max(rowMetadata.mid.range[0], overscanRowStartIndex),
+      Math.min(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
+    ],
     middle_h: [
-      Math.max(columnMetadata.mid.range[0], columnStartIndex),
-      Math.min(columnMetadata.mid.range[1], columnStopIndex + 1),
+      Math.max(columnMetadata.mid.range[0], overscanColumnStartIndex),
+      Math.min(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
     ],
     // middle_h: [
-    //   columnStartIndex,
-    //   columnStopIndex + 1,
+    //   overscanColumnStartIndex,
+    //   overscanColumnStopIndex + 1,
 
     // ],
   };

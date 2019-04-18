@@ -334,15 +334,11 @@ function useHelpers(props: HelpersProps) {
 
   const getRange = useMemo(() => {
     return (itemType: ItemType, offset: number, scrollDirection: ScrollDirection) => {
-      const startIndex = getStartIndex(itemType, offset);
-
-      const stopIndex = getStopIndex(itemType, startIndex, offset);
-      // const scrollDirection === ScrollDirection.FORWARD
-      return [
-        startIndex - (scrollDirection === ScrollDirection.FORWARD ? 0 : _overscanCount),
-
-        stopIndex + (scrollDirection === ScrollDirection.FORWARD ? _overscanCount : 0),
-      ];
+      const visibleStartIndex = getStartIndex(itemType, offset);
+      const visibleStopIndex = getStopIndex(itemType, visibleStartIndex, offset);
+      const overscanStartIndex = visibleStartIndex - (scrollDirection === ScrollDirection.FORWARD ? 0 : _overscanCount);
+      const overscanStopIndex = visibleStopIndex + (scrollDirection === ScrollDirection.FORWARD ? _overscanCount : 0);
+      return [overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex];
     };
   }, [getStartIndex, getStopIndex, _overscanCount]);
 

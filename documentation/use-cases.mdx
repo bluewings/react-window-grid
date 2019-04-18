@@ -4,13 +4,35 @@ name: use cases
 
 import { useState } from 'react';
 import { Props } from 'docz';
-import { WindowGrid } from '../src/core';
+// import { WindowGrid } from '../src/core';
+import WindowGrid from './resources/WindowGridStyled';
 import { columns, rows } from './resources/data/fake-users.js'
 import { Styled } from './resources';
 
 # Use Cases
 
 ## contentWidth < sum(fixedWidth)
+<WindowGrid
+  height={715}
+  rowCount={200}
+  rowHeight={40}
+  columnCount={200}
+  columnWidth={150}
+  fixedTopCount={1}
+  fixedLeftCount={1}
+  fixedRightCount={1}
+  fixedBottomCount={1}
+  overscanCount={0}
+  fillerColumn='stretch'
+  fitToGrid={true}
+  
+>
+{({ rowIndex, columnIndex, className, style }) => (
+  <div className={className} style={style}>
+    {rowIndex} , {columnIndex}
+  </div>
+)}
+</WindowGrid>
 
 ## shrink
 
