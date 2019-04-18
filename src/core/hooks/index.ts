@@ -1,6 +1,7 @@
 import useCachedItem from './useCachedItem';
 import useClassNames from './useClassNames';
 import useGuidelines from './useGuidelines';
+import useHandle from './useHandle';
 import useHelpers from './useHelpers';
 import useMetadata from './useMetadata';
 import useContainerInfo from './useContainerInfo';
@@ -13,6 +14,7 @@ export {
   useCachedItem,
   useClassNames,
   useGuidelines,
+  useHandle,
   useHelpers,
   useMetadata,
   useContainerInfo,

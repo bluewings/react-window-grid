@@ -5,6 +5,7 @@ import {
   useCachedItem,
   useClassNames,
   useGuidelines,
+  useHandle,
   useHelpers,
   useContainerInfo,
   useScrollbarSize,
@@ -50,6 +51,7 @@ type WindowGridProps = {
   theme?: ThemeFunction;
 
   fitToGrid?: boolean;
+  onScroll?: Function;
 
   // maxScrollY?: number
   // maxScrollX?: number
@@ -77,6 +79,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
     horizontalScrollDirection: ScrollDirection.FORWARD,
   });
 
+  const onScroll = useHandle(props.onScroll);
+
   const scrollHelper = useScrollHelper();
 
   const timeoutID = useRef<NodeJS.Timeout>();
@@ -89,17 +93,29 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
       scrollLeft: nextScrollLeft,
       verticalScrollDirection: scrollTop > nextScrollTop ? ScrollDirection.BACKWARD : ScrollDirection.FORWARD,
       horizontalScrollDirection: scrollLeft > nextScrollLeft ? ScrollDirection.BACKWARD : ScrollDirection.FORWARD,
+      rowStartIndex: visibleRowStartIndex,
+      rowStopIndex: visibleRowStopIndex,
+      columnStartIndex: visibleColumnStartIndex,
+      columnStopIndex: visibleColumnStopIndex,
     };
     setScroll(scroll);
+    onScroll(scroll);
     scrollHelper.check(nextScrollLeft, nextScrollTop);
     timeoutID.current = setTimeout(() => {
-      setScroll({ ...scroll, isScrolling: false });
-      if (props.fitToGrid && !scrollHelper.isScrolling() && misc.current) {
+      let _scroll = { ...scroll, isScrolling: false };
+      if (
+        misc.current &&
+        props.fitToGrid &&
+        !scrollHelper.isScrolling() &&
         scrollHelper.scrollTo({
           x: closestGridOffset(ItemType.COLUMN, misc.current),
           y: closestGridOffset(ItemType.ROW, misc.current),
-        });
+        })
+      ) {
+        _scroll = { ...scroll, isScrolling: true };
       }
+      setScroll(_scroll);
+      onScroll(_scroll);
     }, IS_SCROLLING_DEBOUNCE_INTERVAL);
   };
 

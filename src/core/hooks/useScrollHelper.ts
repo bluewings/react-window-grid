@@ -42,7 +42,7 @@ function useScroll() {
 
     const scrollTo = ({ x, y, easing = 'easeInCubic', duration = 200 }: ScrollTo) => {
       if (!target.current || (target.current.scrollTop === y && target.current.scrollLeft === x)) {
-        return;
+        return false;
       }
 
       if (animejs.current) {
@@ -60,6 +60,8 @@ function useScroll() {
         update,
         complete,
       });
+
+      return true;
     };
 
     const isScrolling = () => state.current.isScrolling;
