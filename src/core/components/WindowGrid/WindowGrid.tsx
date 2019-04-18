@@ -93,10 +93,10 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
       scrollLeft: nextScrollLeft,
       verticalScrollDirection: scrollTop > nextScrollTop ? ScrollDirection.BACKWARD : ScrollDirection.FORWARD,
       horizontalScrollDirection: scrollLeft > nextScrollLeft ? ScrollDirection.BACKWARD : ScrollDirection.FORWARD,
-      rowStartIndex: visibleRowStartIndex,
-      rowStopIndex: visibleRowStopIndex,
-      columnStartIndex: visibleColumnStartIndex,
-      columnStopIndex: visibleColumnStopIndex,
+      rowStartIndex: misc.current.visibleRowStartIndex,
+      rowStopIndex: misc.current.visibleRowStopIndex,
+      columnStartIndex: misc.current.visibleColumnStartIndex,
+      columnStopIndex: misc.current.visibleColumnStopIndex,
     };
     setScroll(scroll);
     onScroll(scroll);
