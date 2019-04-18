@@ -354,6 +354,15 @@ function useHelpers(props: HelpersProps) {
     clientHeight,
     innerWidth,
     innerHeight,
+
+    // @ts-ignore
+    fixedTopCount: rowMetadata.pre.count,
+    // @ts-ignore
+    fixedBottomCount: rowMetadata.post.count,
+    // @ts-ignore
+    fixedLeftCount: columnMetadata.pre.count,
+    // @ts-ignore
+    fixedRightCount: columnMetadata.post.count,
     //     getStartIndex,
     // getStopIndex,
     getRange,

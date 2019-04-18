@@ -3,29 +3,29 @@ import { Metadata, ItemPosition } from './useMetadata';
 import styles from '../components/WindowGrid/WindowGrid.module.scss';
 
 function useItems(rowRange: number[], colRange: number[], getCachedStyle: Function) {
-  const [overscanRowStartIndex, overscanRowStopIndex] = rowRange;
-  const [overscanColumnStartIndex, overscanColumnStopIndex] = colRange;
+  const [rowStartIndex, rowStopIndex] = rowRange;
+  const [columnStartIndex, columnStopIndex] = colRange;
   return useMemo(() => {
     // const
 
     const items = [];
 
-    for (let rowIndex = overscanRowStartIndex; rowIndex < overscanRowStopIndex; rowIndex++) {
+    for (let rowIndex = rowStartIndex; rowIndex < rowStopIndex; rowIndex++) {
       let rowType = [];
-      if (rowIndex === overscanRowStartIndex) {
+      if (rowIndex === rowStartIndex) {
         rowType.push('first');
       }
-      if (rowIndex === overscanRowStopIndex - 1) {
+      if (rowIndex === rowStopIndex - 1) {
         rowType.push('last');
       }
-      for (let colIndex = overscanColumnStartIndex; colIndex < overscanColumnStopIndex; colIndex++) {
+      for (let colIndex = columnStartIndex; colIndex < columnStopIndex; colIndex++) {
         const key = rowIndex + '_' + colIndex;
 
         let colType = [];
-        if (colIndex === overscanColumnStartIndex) {
+        if (colIndex === columnStartIndex) {
           colType.push('first');
         }
-        if (colIndex === overscanColumnStopIndex - 1) {
+        if (colIndex === columnStopIndex - 1) {
           colType.push('last');
         }
         const { content, style } = getCachedStyle(rowIndex, colIndex, rowType, colType);
@@ -39,7 +39,41 @@ function useItems(rowRange: number[], colRange: number[], getCachedStyle: Functi
       }
     }
     return items;
-  }, [overscanRowStartIndex, overscanRowStopIndex, overscanColumnStartIndex, overscanColumnStopIndex, getCachedStyle]);
+  }, [rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, getCachedStyle]);
+}
+
+function useRange(
+  rowMetadata: Metadata,
+  overscanRowStartIndex: number,
+  overscanRowStopIndex: number,
+  columnMetadata: Metadata,
+  overscanColumnStartIndex: number,
+  overscanColumnStopIndex: number,
+) {
+  return useMemo(
+    () => ({
+      top: rowMetadata.pre.range,
+      bottom: rowMetadata.post.range,
+      left: columnMetadata.pre.range,
+      right: columnMetadata.post.range,
+      middle_v: [
+        Math.max(rowMetadata.mid.range[0], overscanRowStartIndex),
+        Math.min(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
+      ],
+      middle_h: [
+        Math.max(columnMetadata.mid.range[0], overscanColumnStartIndex),
+        Math.min(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
+      ],
+    }),
+    [
+      rowMetadata,
+      overscanRowStartIndex,
+      overscanRowStopIndex,
+      columnMetadata,
+      overscanColumnStartIndex,
+      overscanColumnStopIndex,
+    ],
+  );
 }
 
 function useSections(
@@ -54,26 +88,14 @@ function useSections(
   getCachedStyle: Function,
   classNames: any,
 ) {
-  const range = {
-    top: rowMetadata.pre.range,
-    bottom: rowMetadata.post.range,
-    left: columnMetadata.pre.range,
-    right: columnMetadata.post.range,
-    // middle_v: [overscanRowStartIndex, overscanRowStopIndex + 1],
-    middle_v: [
-      Math.max(rowMetadata.mid.range[0], overscanRowStartIndex),
-      Math.min(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
-    ],
-    middle_h: [
-      Math.max(columnMetadata.mid.range[0], overscanColumnStartIndex),
-      Math.min(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
-    ],
-    // middle_h: [
-    //   overscanColumnStartIndex,
-    //   overscanColumnStopIndex + 1,
-
-    // ],
-  };
+  const range = useRange(
+    rowMetadata,
+    overscanRowStartIndex,
+    overscanRowStopIndex,
+    columnMetadata,
+    overscanColumnStartIndex,
+    overscanColumnStopIndex,
+  );
 
   const sections = [
     {
@@ -112,11 +134,7 @@ function useSections(
       className: `${classNames.SECTION} ${classNames.SECTION_BOTTOM} ${styles.sticky}`,
       style: { top: contentHeight - rowMetadata.post.size, height: rowMetadata.post.size },
       items: useItems(range.bottom, range.middle_h, getCachedStyle),
-      // subs: [
-
-      // ]
     },
-
     {
       key: 'bottom-left',
       className: `${classNames.SECTION} ${classNames.SECTION_BOTTOM} ${classNames.SECTION_LEFT} ${styles.sticky}`,
@@ -136,12 +154,7 @@ function useSections(
     },
   ]
     .filter((e) => e.items.length > 0)
-    .map((e) => {
-      return {
-        ...e,
-        // className: e.className + ' ' + e.key,
-      };
-    });
+    .map((e) => ({ ...e }));
   return {
     center: {
       key: 'middle',
