@@ -97,6 +97,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
       rowStopIndex: misc.current.visibleRowStopIndex,
       columnStartIndex: misc.current.visibleColumnStartIndex,
       columnStopIndex: misc.current.visibleColumnStopIndex,
+      eventTime: new Date().valueOf(),
     };
     setScroll(scroll);
     onScroll(scroll);
@@ -113,6 +114,22 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
         })
       ) {
         _scroll = { ...scroll, isScrolling: true };
+      }
+      if (_scroll.isScrolling === false) {
+        const [, , visibleRowStartIndex, visibleRowStopIndex] = getRange(
+          ItemType.ROW,
+          _scroll.scrollTop,
+          _scroll.verticalScrollDirection,
+        );
+        const [, , visibleColumnStartIndex, visibleColumnStopIndex] = getRange(
+          ItemType.COLUMN,
+          _scroll.scrollLeft,
+          _scroll.horizontalScrollDirection,
+        );
+        _scroll.rowStartIndex = visibleRowStartIndex;
+        _scroll.rowStopIndex = visibleRowStopIndex;
+        _scroll.columnStartIndex = visibleColumnStartIndex;
+        _scroll.columnStopIndex = visibleColumnStopIndex;
       }
       setScroll(_scroll);
       onScroll(_scroll);
