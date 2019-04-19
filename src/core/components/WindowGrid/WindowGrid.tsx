@@ -314,6 +314,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
         clientHeight,
         innerWidth,
         innerHeight,
+        scrollbarWidth,
+        scrollbarHeight,
       });
     }
   }, [
@@ -325,6 +327,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     clientHeight,
     innerWidth,
     innerHeight,
+    scrollbarWidth,
+    scrollbarHeight,
   ]);
 
   return (
