@@ -1,6 +1,15 @@
 import * as React from 'react';
 // import PropTypes from 'prop-types';
-import { FunctionComponent, useEffect, useMemo, SyntheticEvent, useState, useRef } from 'react';
+import {
+  FunctionComponent,
+  forwardRef,
+  useEffect,
+  useMemo,
+  SyntheticEvent,
+  useState,
+  useRef,
+  useImperativeHandle,
+} from 'react';
 import {
   useCachedItem,
   useClassNames,
@@ -50,7 +59,7 @@ type WindowGridProps = {
   classNames?: ClassNames;
   theme?: ThemeFunction;
 
-  fitToGrid?: boolean;
+  scrollSnap?: boolean;
   onScroll?: Function;
 
   // maxScrollY?: number
@@ -64,10 +73,17 @@ type WindowGridProps = {
   // guidelineStyle?: Function;
 };
 
+type ScrollTo = {
+  rowIndex?: number;
+  columnIndex?: number;
+  easing?: string;
+  duration?: number;
+};
+
 // const IS_SCROLLING_DEBOUNCE_INTERVAL = 150;
 const IS_SCROLLING_DEBOUNCE_INTERVAL = 150;
 
-const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
+const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
   const [
     { isScrolling, scrollTop, scrollLeft, verticalScrollDirection, horizontalScrollDirection },
     setScroll,
@@ -106,7 +122,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
       let _scroll = { ...scroll, isScrolling: false };
       if (
         misc.current &&
-        props.fitToGrid &&
+        props.scrollSnap &&
         !scrollHelper.isScrolling() &&
         scrollHelper.scrollTo({
           x: closestGridOffset(ItemType.COLUMN, misc.current),
@@ -263,6 +279,28 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
   //   ]
   // }, [classNames, isScrolling, scrollClassName])
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollTo: ({ rowIndex, columnIndex, easing, duration }: ScrollTo) => {
+        const x =
+          typeof columnIndex === 'undefined'
+            ? misc.current.scrollLeft
+            : getItemMetadata(
+                ItemType.COLUMN,
+                Math.max(0, Math.min(columnIndex, columnCount - helpers.fixedRightCount - 1)),
+              ).localOffset;
+        const y =
+          typeof rowIndex === 'undefined'
+            ? misc.current.scrollTop
+            : getItemMetadata(ItemType.ROW, Math.max(0, Math.min(rowIndex, rowCount - helpers.fixedBottomCount - 1)))
+                .localOffset;
+        scrollHelper.scrollTo({ x, y, easing, duration });
+      },
+    }),
+    [rowCount, columnCount, helpers.fixedBottomCount, helpers.fixedRightCount, getItemMetadata],
+  );
+
   return (
     <div ref={containerInfo.ref} className={containerInfo.className} style={{ width: containerInfo.offsetWidth }}>
       {/* <pre>{JSON.stringify({ scrollTop, scrollLeft, clientHeight, scrollHeight })}</pre> */}
@@ -294,4 +332,4 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props) => {
   );
 };
 
-export default WindowGrid;
+export default forwardRef(WindowGrid);

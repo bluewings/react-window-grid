@@ -3,13 +3,14 @@ name: Introduction
 route: /
 ---
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Props } from 'docz';
 import { Playground } from './resources';
 // import { WindowGrid } from '../src/core';
+import WindowGrid from '../src/core/components/WindowGrid/WindowGrid.tsx'
 import mona from './resources/assets/mona.jpg';
 import useImage from './resources/hooks/useImage';
-import WindowGrid from './resources/WindowGridStyled';
+// import WindowGrid from './resources/WindowGridStyled';
 
 # Introduction
 
@@ -28,16 +29,34 @@ import WindowGrid from './resources/WindowGridStyled';
         {rowIndex} , {columnIndex}
       </div>
     );
+  const windowGridRef = useRef();
+  const windowGridRef2 = useRef();
+
+  const handleClick = () => {
+    windowGridRef2.current.scrollTo({
+      rowIndex: 1000, 
+      duration: 2000
+    });
+  };
   return (
+    <div ref={windowGridRef}>
+      <div />
+    
     <WindowGrid
+      ref={windowGridRef2} 
       height={295}
       rowCount={100}
       rowHeight={40}
       columnCount={100}
       columnWidth={100}
+      fixedTopCount={2}
+      fixedLeftCount={2}
+      fixedBottomCount={2}
     >
     {Cell}
     </WindowGrid>
+    <button type='button' onClick={handleClick}>scrollTest</button>
+    </div>
   );
 }}
 </Playground>
