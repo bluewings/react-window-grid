@@ -61,6 +61,7 @@ type WindowGridProps = {
 
   scrollSnap?: boolean;
   onScroll?: Function;
+  onResize?: Function;
 
   // maxScrollY?: number
   // maxScrollX?: number
@@ -96,6 +97,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
   });
 
   const onScroll = useHandle(props.onScroll);
+  const onResize = useHandle(props.onResize);
 
   const scrollHelper = useScrollHelper();
 
@@ -300,6 +302,30 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     }),
     [rowCount, columnCount, helpers.fixedBottomCount, helpers.fixedRightCount, getItemMetadata],
   );
+
+  useEffect(() => {
+    if (clientWidth > 0) {
+      onResize({
+        offsetWidth: containerInfo.offsetWidth,
+        offsetHeight: containerInfo.offsetHeight,
+        scrollWidth,
+        scrollHeight,
+        clientWidth,
+        clientHeight,
+        innerWidth,
+        innerHeight,
+      });
+    }
+  }, [
+    containerInfo.offsetWidth,
+    containerInfo.offsetHeight,
+    scrollWidth,
+    scrollHeight,
+    clientWidth,
+    clientHeight,
+    innerWidth,
+    innerHeight,
+  ]);
 
   return (
     <div ref={containerInfo.ref} className={containerInfo.className} style={{ width: containerInfo.offsetWidth }}>
