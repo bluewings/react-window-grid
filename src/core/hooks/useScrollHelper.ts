@@ -17,7 +17,22 @@ type ScrollTo = {
   duration?: number;
 };
 
-function useScroll() {
+type ScrollToIndex = {
+  rowIndex: number;
+  columnIndex: number;
+  easing?: string;
+  duration?: number;
+};
+
+// rowCount, columnCount, fixedBottomCount, fixedRightCount, getItemMetadata, misc,
+function useScrollHelper(
+  rowCount: number,
+  columnCount: number,
+  fixedBottomCount: number,
+  fixedRightCount: number,
+  getItemMetadata: any,
+  misc: any,
+) {
   const target = useRef<HTMLElementRef>(null);
   const state = useRef<State>({ isScrolling: false, position: null });
   const animejs = useRef<anime.AnimeInstance>();
@@ -79,9 +94,28 @@ function useScroll() {
     return [scrollTo, isScrolling, check];
   }, []);
 
+  const scrollToIndexFn = useRef<Function>();
+  scrollToIndexFn.current = useMemo(() => {
+    return ({ rowIndex, columnIndex, easing, duration }: ScrollToIndex) => {
+      const x =
+        typeof columnIndex === 'undefined'
+          ? misc.current.scrollLeft
+          : getItemMetadata(ItemType.COLUMN, Math.max(0, Math.min(columnIndex, columnCount - fixedRightCount - 1)))
+              .localOffset;
+      const y =
+        typeof rowIndex === 'undefined'
+          ? misc.current.scrollTop
+          : getItemMetadata(ItemType.ROW, Math.max(0, Math.min(rowIndex, rowCount - fixedBottomCount - 1))).localOffset;
+      scrollTo({ x, y, easing, duration });
+    };
+  }, [rowCount, columnCount, fixedBottomCount, fixedRightCount, getItemMetadata, misc]);
+
+  const scrollToIndex = (...args: any[]) => scrollToIndexFn.current && scrollToIndexFn.current(...args);
+
   return {
     target,
     scrollTo,
+    scrollToIndex,
     check,
     isScrolling,
   };
@@ -139,6 +173,6 @@ function closestGridOffset(itemType: ItemType, misc: any) {
   return scrollOffset;
 }
 
-export default useScroll;
+export default useScrollHelper;
 
 export { closestGridOffset };

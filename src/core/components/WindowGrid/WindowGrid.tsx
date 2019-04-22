@@ -63,6 +63,9 @@ type WindowGridProps = {
   onScroll?: Function;
   onResize?: Function;
 
+  defaultRowIndex?: number;
+  defaultColumnIndex?: number;
+
   // maxScrollY?: number
   // maxScrollX?: number
 
@@ -99,7 +102,47 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
   const onScroll = useHandle(props.onScroll);
   const onResize = useHandle(props.onResize);
 
-  const scrollHelper = useScrollHelper();
+  const classNames = useClassNames(props.classNames);
+
+  const theme = useTheme(props.theme, classNames);
+
+  const containerInfo = useContainerInfo({ ...props, theme });
+
+    const [scrollbarWidth, scrollbarHeight] = useScrollbarSize();
+
+  const helpers = useHelpers({
+    ...props,
+
+    innerWidth: containerInfo.innerWidth,
+    innerHeight: containerInfo.innerHeight,
+    scrollbarWidth,
+    scrollbarHeight,
+  });
+
+  const {
+    columnMetadata,
+    rowMetadata,
+    scrollWidth,
+    scrollHeight,
+    clientWidth,
+    clientHeight,
+    innerWidth,
+    innerHeight,
+  } = helpers;
+
+  const { getItemMetadata, getRange } = helpers;
+
+  const { columnCount, columnWidth, rowCount, rowHeight } = props;
+
+  const misc = useRef<any>();
+  const scrollHelper = useScrollHelper(
+    rowCount,
+    columnCount,
+    helpers.fixedBottomCount,
+    helpers.fixedRightCount,
+    getItemMetadata,
+    misc,
+  );
 
   const timeoutID = useRef<NodeJS.Timeout>();
   const handleScroll = (event: ScrollEvent) => {
@@ -156,45 +199,6 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
 
   useEffect(() => () => timeoutID.current && clearTimeout(timeoutID.current), []);
 
-  const classNames = useClassNames(props.classNames);
-
-  const theme = useTheme(props.theme, classNames);
-
-  // console.log('T H E M E : ', theme);
-  const containerInfo = useContainerInfo({ ...props, theme });
-
-  // console.log(classNames);
-
-  // console.log(containerInfo);
-
-  // const { offsetWidth, offsetHeight } = container;
-
-  const [scrollbarWidth, scrollbarHeight] = useScrollbarSize();
-
-  const { columnCount, columnWidth, rowCount, rowHeight } = props;
-
-  const helpers = useHelpers({
-    ...props,
-
-    innerWidth: containerInfo.innerWidth,
-    innerHeight: containerInfo.innerHeight,
-    scrollbarWidth,
-    scrollbarHeight,
-  });
-
-  const {
-    columnMetadata,
-    rowMetadata,
-    scrollWidth,
-    scrollHeight,
-    clientWidth,
-    clientHeight,
-    innerWidth,
-    innerHeight,
-  } = helpers;
-
-  const { getItemMetadata, getRange } = helpers;
-
   const [overscanRowStartIndex, overscanRowStopIndex, visibleRowStartIndex, visibleRowStopIndex] = getRange(
     ItemType.ROW,
     scrollTop,
@@ -229,7 +233,6 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     classNames,
   );
 
-  const misc = useRef<any>();
   misc.current = {
     clientHeight,
     clientWidth,
@@ -274,34 +277,12 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     // return classNames;
   }, [scrollTop, scrollLeft, clientHeight, scrollHeight, clientWidth, scrollWidth, isScrolling, classNames]);
 
-  // const statusClassName = useMemo(() => {
-  //   const classNames_ = [
-  //     isScrolling ? classNames.IS_SCROLLING : classNames.IS_NOT_SCROLLING,
+  useEffect(() => {
+    const { defaultRowIndex: rowIndex, defaultColumnIndex: columnIndex } = props;
+    scrollHelper.scrollToIndex({ rowIndex, columnIndex, duration: 0 });
+  }, [props.defaultRowIndex, props.defaultColumnIndex]);
 
-  //   ]
-  // }, [classNames, isScrolling, scrollClassName])
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      scrollTo: ({ rowIndex, columnIndex, easing, duration }: ScrollTo) => {
-        const x =
-          typeof columnIndex === 'undefined'
-            ? misc.current.scrollLeft
-            : getItemMetadata(
-                ItemType.COLUMN,
-                Math.max(0, Math.min(columnIndex, columnCount - helpers.fixedRightCount - 1)),
-              ).localOffset;
-        const y =
-          typeof rowIndex === 'undefined'
-            ? misc.current.scrollTop
-            : getItemMetadata(ItemType.ROW, Math.max(0, Math.min(rowIndex, rowCount - helpers.fixedBottomCount - 1)))
-                .localOffset;
-        scrollHelper.scrollTo({ x, y, easing, duration });
-      },
-    }),
-    [rowCount, columnCount, helpers.fixedBottomCount, helpers.fixedRightCount, getItemMetadata],
-  );
+  useImperativeHandle(ref, () => ({ scrollTo: scrollHelper.scrollToIndex }), []);
 
   useEffect(() => {
     if (clientWidth > 0) {
