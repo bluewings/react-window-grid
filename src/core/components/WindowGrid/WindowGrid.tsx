@@ -29,7 +29,22 @@ import { closestGridOffset } from '../../hooks/useScrollHelper';
 
 import styles from './WindowGrid.module.scss';
 
+enum FillerType {
+  NONE = 'none',
+  APPEND = 'append',
+  STRETCH = 'stretch',
+  SHRINK = 'shrink',
+}
+
 type ScrollEvent = SyntheticEvent<HTMLDivElement>;
+
+type ChildProp = {
+  rowIndex: number;
+  columnIndex: number;
+  className: string;
+  style: any;
+  [key: number]: any;
+};
 
 type WindowGridProps = {
   scrollTop?: number;
@@ -47,11 +62,11 @@ type WindowGridProps = {
   fixedBottomCount?: number;
   overscanCount?: number;
 
-  fillerColumn?: 'none' | 'append' | 'stretch' | 'shrink';
-  fillerRow?: 'none' | 'append' | 'stretch' | 'shrink';
+  fillerColumn?: FillerType | string;
+  fillerRow?: FillerType | string;
   /** 스크롤되는 뷰포트 너비가 특정값 이하로 떨어지면 fixedColumn 이 무효화된다. */
-  minVisibleScrollViewWidth: number;
-  minVisibleScrollViewHeight: number;
+  minVisibleScrollViewWidth?: number;
+  minVisibleScrollViewHeight?: number;
 
   containerStyle?: any;
   guideline?: boolean;
@@ -75,6 +90,7 @@ type WindowGridProps = {
 
   // containerStyle?: string;
   // guidelineStyle?: Function;
+  children?: (params: ChildProp) => JSX.Element | Element;
 };
 
 type ScrollTo = {
@@ -108,7 +124,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
 
   const containerInfo = useContainerInfo({ ...props, theme });
 
-    const [scrollbarWidth, scrollbarHeight] = useScrollbarSize();
+  const [scrollbarWidth, scrollbarHeight] = useScrollbarSize();
 
   const helpers = useHelpers({
     ...props,
