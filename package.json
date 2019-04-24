@@ -1,6 +1,6 @@
 {
   "name": "react-window-grid",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "dist/react-window-grid.cjs.js",
   "module": "dist/react-window-grid.es.js",
   "browser": "dist/react-window-grid.amd.js",
@@ -11,19 +11,17 @@
     "url": "https://github.com/bluewings/react-window-grid"
   },
   "dependencies": {
+    "animejs": "^3.0.1",
+    "emotion": "^10.0.9"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx-source": "^7.2.0",
     "@types/animejs": "^2.0.2",
     "@types/jest": "^24.0.11",
     "@types/node": "^11.12.0",
     "@types/react": "^16.8.10",
     "@types/react-dom": "^16.8.3",
-    "animejs": "^3.0.1",
     "babel-loader": "^8.0.5",
-    "emotion": "^10.0.9",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0"
-  },
-  "devDependencies": {
-    "@babel/plugin-transform-react-jsx-source": "^7.2.0",
     "babel-plugin-transform-commonjs-es2015-modules": "^4.0.1",
     "cra-rewired": "^1.0.22",
     "docz": "^1.0.3",
@@ -35,6 +33,8 @@
     "postcss-preset-env": "^6.5.0",
     "prettier": "^1.16.4",
     "pug-as-jsx-loader": "^1.0.66",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "react-scripts": "^2.1.8",
     "rollup": "^1.2.3",
     "rollup-plugin-babel": "^4.3.2",
