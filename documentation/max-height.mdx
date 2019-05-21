@@ -1,0 +1,44 @@
+---
+name: max-height
+route: /max-height
+---
+
+import { useState, useRef } from 'react';
+import { Props } from 'docz';
+import { Playground } from './resources';
+// import { WindowGrid } from '../src/core';
+import WindowGrid from '../src/core/components/WindowGrid/WindowGrid.tsx'
+import mona from './resources/assets/mona.jpg';
+
+## max-height
+
+<Playground>
+{() => {
+  const Cell = ({ rowIndex, columnIndex, className, style }) => (
+      <div className={className} style={style}>
+        {rowIndex} , {columnIndex}
+      </div>
+    );
+  const windowGridRef = useRef();
+  const windowGridRef2 = useRef();
+
+  
+  return (
+    <div ref={windowGridRef}>
+      <div />
+    
+    <WindowGrid
+      ref={windowGridRef2} 
+      maxHeight={215}
+      rowCount={5}
+      rowHeight={40}
+      columnCount={100}
+      columnWidth={100}
+      fixedTopCount={1}
+    >
+    {Cell}
+    </WindowGrid>
+    </div>
+  );
+}}
+</Playground>

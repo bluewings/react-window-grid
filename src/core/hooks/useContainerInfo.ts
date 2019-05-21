@@ -15,9 +15,13 @@ type ContainerInfo = {
   ref: HTMLElementRef;
   className: string;
   offsetWidth: number;
-  offsetHeight: number;
+  // offsetHeight: number;
   innerWidth: number;
   innerHeight: number;
+  borderTop: number;
+  borderLeft: number;
+  borderRight: number;
+  borderBottom: number;
 };
 
 const DEFAULT_HEIGHT = 400;
@@ -59,7 +63,12 @@ function useContainerInfo({ width, height, containerStyle, theme }: StyleProps):
     return [theme, containerClassName, css({ height: offsetHeight })].filter((e: any) => e).join(' ');
   }, [containerClassName, offsetHeight]);
 
-  return { ref, className, offsetWidth, offsetHeight, innerWidth, innerHeight };
+  return { ref, className, offsetWidth,
+    // offsetHeight,
+    innerWidth, innerHeight,
+  
+    borderTop, borderLeft, borderRight, borderBottom,
+  };
 }
 
 export default useContainerInfo;

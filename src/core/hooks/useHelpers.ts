@@ -35,6 +35,8 @@ type HelpersProps = {
   fillerRow?: string;
   minVisibleScrollViewWidth?: number;
   minVisibleScrollViewHeight?: number;
+
+  maxHeight?: number;
 };
 
 function useRangeHelper({
@@ -210,6 +212,9 @@ function useHelpers(props: HelpersProps) {
     scrollbarHeight,
     fillerColumn,
     fillerRow,
+
+
+    maxHeight = null,
   } = props;
 
   const {
@@ -234,18 +239,36 @@ function useHelpers(props: HelpersProps) {
 
     let contentWidth = innerWidth;
 
-    let contentHeight = innerHeight;
+    // console.log({ contentHeight, innerWidth });
+let contentHeight;
+    if (maxHeight) {
+      contentHeight = Math.max(maxHeight, scrollHeight);
+
+    } else {
+      contentHeight = innerHeight;
+    }
+
+    // console.log({ contentHeight, maxHeight, scrollHeight });
+    // if (con
+    // scroll
+
+
     const scrollbarX = contentWidth < scrollWidth;
+    contentHeight -= scrollbarX ? scrollbarHeight : 0;
     let scrollbarY = contentHeight < scrollHeight;
 
     contentWidth -= scrollbarY ? scrollbarWidth : 0;
-    contentHeight -= scrollbarX ? scrollbarHeight : 0;
+    // contentHeight -= scrollbarX ? scrollbarHeight : 0;
+
+    // console.log({ scrollbarX, scrollbarY });
+
+    
 
     // if (scrollHeight < contentHeight) {
     //   contentHeight = scrollHeight;
     // }
 
-    if (scrollbarX && !scrollbarY && contentHeight < scrollHeight) {
+    if (scrollbarX && !scrollbarY && contentHeight <= scrollHeight) {
       scrollbarY = true;
       contentWidth -= scrollbarWidth;
     }
@@ -259,11 +282,18 @@ function useHelpers(props: HelpersProps) {
     if (fillerRow === 'shrink' && scrollHeight < contentHeight) {
       contentHeight = scrollHeight;
 
-      innerHeight = scrollHeight + (scrollbarX ? scrollbarHeight : 0);
+      innerHeight = contentHeight + (scrollbarX ? scrollbarHeight : 0);
     }
+    // else {
+    //   // console.log({ innerHeight, scrollHeight })
+    //   // innerHeight = scrollHeight + (scrollbarX ? scrollbarHeight : 0);
+    // }
+    
+    innerHeight = contentHeight + (scrollbarX ? scrollbarHeight : 0);
+    // console.log(innerHeight);
 
     return [contentWidth, contentHeight, innerWidth, innerHeight];
-  }, [_innerWidth, _innerHeight, scrollWidth, scrollHeight, scrollbarWidth, scrollbarHeight, fillerColumn, fillerRow]);
+  }, [_innerWidth, _innerHeight, scrollWidth, scrollHeight, scrollbarWidth, scrollbarHeight, fillerColumn, fillerRow, maxHeight]);
 
   let columnMetadata = useMetadataFixed(_columnMetadata, clientWidth, fillerColumn, minVisibleScrollViewWidth);
   let rowMetadata = useMetadataFixed(_rowMetadata, clientHeight, fillerRow, minVisibleScrollViewHeight);

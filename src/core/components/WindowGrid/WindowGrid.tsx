@@ -51,6 +51,7 @@ type WindowGridProps = {
   scrollLeft?: number;
   width?: number;
   height?: number;
+  maxHeight?: number;
   columnCount: number;
   columnWidth: number | Function;
   rowCount: number;
@@ -81,15 +82,6 @@ type WindowGridProps = {
   defaultRowIndex?: number;
   defaultColumnIndex?: number;
 
-  // maxScrollY?: number
-  // maxScrollX?: number
-
-  // cellStyle?: string;
-
-  // columns: array
-
-  // containerStyle?: string;
-  // guidelineStyle?: Function;
   children?: (params: ChildProp) => JSX.Element | Element;
 };
 
@@ -134,6 +126,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     scrollbarWidth,
     scrollbarHeight,
   });
+
+  // console.log('helpers', helpers)
 
   const {
     columnMetadata,
@@ -300,11 +294,16 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
 
   useImperativeHandle(ref, () => ({ scrollTo: scrollHelper.scrollToIndex }), []);
 
+  const offsetHeight = useMemo(() => {
+    return innerHeight + containerInfo.borderTop + containerInfo.borderBottom;
+  }, [innerHeight, containerInfo.borderTop, containerInfo.borderBottom]);
+
   useEffect(() => {
     if (clientWidth > 0) {
       onResize({
         offsetWidth: containerInfo.offsetWidth,
-        offsetHeight: containerInfo.offsetHeight,
+        // offsetHeight: containerInfo.offsetHeight,
+        offsetHeight,
         scrollWidth,
         scrollHeight,
         clientWidth,
@@ -317,7 +316,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     }
   }, [
     containerInfo.offsetWidth,
-    containerInfo.offsetHeight,
+    // containerInfo.offsetHeight,
+    offsetHeight,
     scrollWidth,
     scrollHeight,
     clientWidth,
@@ -328,8 +328,10 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     scrollbarHeight,
   ]);
 
+
   return (
-    <div ref={containerInfo.ref} className={containerInfo.className} style={{ width: containerInfo.offsetWidth }}>
+    <div ref={containerInfo.ref} className={containerInfo.className} style={{ width: containerInfo.offsetWidth,
+    height: offsetHeight }}>
       {/* <pre>{JSON.stringify({ scrollTop, scrollLeft, clientHeight, scrollHeight })}</pre> */}
       <div className={statusClassName}>
         <div
