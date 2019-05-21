@@ -242,13 +242,12 @@ function useHelpers(props: HelpersProps) {
     // console.log({ contentHeight, innerWidth });
 let contentHeight;
     if (maxHeight) {
-      contentHeight = Math.max(maxHeight, scrollHeight);
+      contentHeight = Math.min(maxHeight, scrollHeight + scrollbarHeight);
 
     } else {
       contentHeight = innerHeight;
     }
 
-    // console.log({ contentHeight, maxHeight, scrollHeight });
     // if (con
     // scroll
 
@@ -267,8 +266,7 @@ let contentHeight;
     // if (scrollHeight < contentHeight) {
     //   contentHeight = scrollHeight;
     // }
-
-    if (scrollbarX && !scrollbarY && contentHeight <= scrollHeight) {
+    if (scrollbarX && !scrollbarY && contentHeight <= scrollHeight + scrollbarHeight) {
       scrollbarY = true;
       contentWidth -= scrollbarWidth;
     }
@@ -276,13 +274,12 @@ let contentHeight;
     if (fillerColumn === 'shrink' && scrollWidth < contentWidth) {
       contentWidth = scrollWidth;
 
-      innerWidth = scrollWidth + (scrollbarY ? scrollbarWidth : 0);
     }
+    innerWidth = contentWidth + (scrollbarY ? scrollbarWidth : 0);
     // console.log(scrollHeight, contentHeight);
     if (fillerRow === 'shrink' && scrollHeight < contentHeight) {
       contentHeight = scrollHeight;
 
-      innerHeight = contentHeight + (scrollbarX ? scrollbarHeight : 0);
     }
     // else {
     //   // console.log({ innerHeight, scrollHeight })
