@@ -252,11 +252,25 @@ let contentHeight;
     // scroll
 
 
-    const scrollbarX = contentWidth < scrollWidth;
-    contentHeight -= scrollbarX ? scrollbarHeight : 0;
-    let scrollbarY = contentHeight < scrollHeight;
+    let scrollbarX = contentWidth < scrollWidth;
+    let _contentHeight = contentHeight - (scrollbarX ? scrollbarHeight : 0);
 
-    contentWidth -= scrollbarY ? scrollbarWidth : 0;
+
+
+    let scrollbarY = _contentHeight < scrollHeight;
+    if (!scrollbarX && scrollbarY) {
+      let _contentWidth = contentWidth - (scrollbarY ? scrollbarWidth : 0);
+      scrollbarX = _contentWidth < scrollWidth;
+    }
+
+
+    if (scrollbarX) {
+      contentHeight -= scrollbarHeight;
+    }
+    if (scrollbarY) {
+      contentWidth -= scrollbarWidth;
+    }
+
     // contentHeight -= scrollbarX ? scrollbarHeight : 0;
 
     // console.log({ scrollbarX, scrollbarY });
@@ -266,20 +280,14 @@ let contentHeight;
     // if (scrollHeight < contentHeight) {
     //   contentHeight = scrollHeight;
     // }
-    if (scrollbarX && !scrollbarY && contentHeight <= scrollHeight + scrollbarHeight) {
-      scrollbarY = true;
-      contentWidth -= scrollbarWidth;
-    }
 
     if (fillerColumn === 'shrink' && scrollWidth < contentWidth) {
       contentWidth = scrollWidth;
 
     }
     innerWidth = contentWidth + (scrollbarY ? scrollbarWidth : 0);
-    // console.log(scrollHeight, contentHeight);
     if (fillerRow === 'shrink' && scrollHeight < contentHeight) {
       contentHeight = scrollHeight;
-
     }
     // else {
     //   // console.log({ innerHeight, scrollHeight })
