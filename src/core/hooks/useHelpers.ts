@@ -297,7 +297,7 @@ let contentHeight;
     innerHeight = contentHeight + (scrollbarX ? scrollbarHeight : 0);
     // console.log(innerHeight);
 
-    if (!scrollbarY && maxHeight && innerHeight > scrollHeight) {
+    if (!scrollbarX && !scrollbarY && maxHeight && innerHeight > scrollHeight) {
       innerHeight = scrollHeight
     }
     return [contentWidth, contentHeight, innerWidth, innerHeight];
