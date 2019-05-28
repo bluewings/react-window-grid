@@ -293,10 +293,13 @@ let contentHeight;
     //   // console.log({ innerHeight, scrollHeight })
     //   // innerHeight = scrollHeight + (scrollbarX ? scrollbarHeight : 0);
     // }
-    
+
     innerHeight = contentHeight + (scrollbarX ? scrollbarHeight : 0);
     // console.log(innerHeight);
 
+    if (!scrollbarY && maxHeight && innerHeight > scrollHeight) {
+      innerHeight = scrollHeight
+    }
     return [contentWidth, contentHeight, innerWidth, innerHeight];
   }, [_innerWidth, _innerHeight, scrollWidth, scrollHeight, scrollbarWidth, scrollbarHeight, fillerColumn, fillerRow, maxHeight]);
 
