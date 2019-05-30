@@ -1,6 +1,6 @@
 {
   "name": "react-window-grid",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "main": "dist/react-window-grid.cjs.js",
   "module": "dist/react-window-grid.es.js",
   "browser": "dist/react-window-grid.amd.js",

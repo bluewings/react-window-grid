@@ -312,6 +312,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
         innerHeight,
         scrollbarWidth,
         scrollbarHeight,
+        scrollbarY: innerWidth !== clientWidth,
+        scrollbarX: innerHeight !== clientHeight,
       });
     }
   }, [

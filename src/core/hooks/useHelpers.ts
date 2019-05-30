@@ -299,6 +299,7 @@ let contentHeight;
 
     if (!scrollbarX && !scrollbarY && maxHeight && innerHeight > scrollHeight) {
       innerHeight = scrollHeight
+      contentHeight = scrollHeight
     }
     return [contentWidth, contentHeight, innerWidth, innerHeight];
   }, [_innerWidth, _innerHeight, scrollWidth, scrollHeight, scrollbarWidth, scrollbarHeight, fillerColumn, fillerRow, maxHeight]);
