@@ -82,6 +82,8 @@ type WindowGridProps = {
   defaultRowIndex?: number;
   defaultColumnIndex?: number;
 
+  overflow?: boolean;
+
   children?: (params: ChildProp) => JSX.Element | Element;
 };
 
@@ -107,6 +109,8 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     horizontalScrollDirection: ScrollDirection.FORWARD,
   });
 
+  const overflow = props.overflow !== false;
+
   const onScroll = useHandle(props.onScroll);
   const onResize = useHandle(props.onResize);
 
@@ -116,7 +120,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
 
   const containerInfo = useContainerInfo({ ...props, theme });
 
-  const [scrollbarWidth, scrollbarHeight] = useScrollbarSize();
+  const [scrollbarWidth, scrollbarHeight] = useScrollbarSize(overflow);
 
   const helpers = useHelpers({
     ...props,
@@ -330,16 +334,18 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     scrollbarHeight,
   ]);
 
-
   return (
-    <div ref={containerInfo.ref} className={containerInfo.className} style={{ width: containerInfo.offsetWidth,
-    height: offsetHeight }}>
+    <div
+      ref={containerInfo.ref}
+      className={containerInfo.className}
+      style={{ width: containerInfo.offsetWidth, height: offsetHeight }}
+    >
       {/* <pre>{JSON.stringify({ scrollTop, scrollLeft, clientHeight, scrollHeight })}</pre> */}
       <div className={statusClassName}>
         <div
           ref={scrollHelper.target}
           style={{ width: innerWidth, height: innerHeight }}
-          className={styles.root}
+          className={`${styles.root} ${overflow === false ? styles.overflowHidden : ''}`}
           onScroll={handleScroll}
         >
           <div style={{ width: scrollWidth, height: scrollHeight }}>

@@ -63,11 +63,18 @@ function useContainerInfo({ width, height, containerStyle, theme }: StyleProps):
     return [theme, containerClassName, css({ height: offsetHeight })].filter((e: any) => e).join(' ');
   }, [containerClassName, offsetHeight]);
 
-  return { ref, className, offsetWidth,
+  return {
+    ref,
+    className,
+    offsetWidth,
     // offsetHeight,
-    innerWidth, innerHeight,
-  
-    borderTop, borderLeft, borderRight, borderBottom,
+    innerWidth,
+    innerHeight,
+
+    borderTop,
+    borderLeft,
+    borderRight,
+    borderBottom,
   };
 }
 
