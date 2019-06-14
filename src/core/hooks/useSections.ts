@@ -13,20 +13,20 @@ function useItems(rowRange: number[], colRange: number[], getCachedStyle: Functi
     for (let rowIndex = rowStartIndex; rowIndex < rowStopIndex; rowIndex++) {
       let rowType = [];
       if (rowIndex === minRowIndex) {
-        rowType.push('first');
+        rowType.push('FIRST');
       }
       if (rowIndex === maxRowIndex - 1) {
-        rowType.push('last');
+        rowType.push('LAST');
       }
       for (let colIndex = colStartIndex; colIndex < colStopIndex; colIndex++) {
         const key = rowIndex + '_' + colIndex;
 
         let colType = [];
         if (colIndex === minColIndex) {
-          colType.push('first');
+          colType.push('FIRST');
         }
         if (colIndex === maxColIndex - 1) {
-          colType.push('last');
+          colType.push('LAST');
         }
         const { content, style } = getCachedStyle(rowIndex, colIndex, rowType, colType);
         items.push(content);

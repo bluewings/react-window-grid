@@ -64,8 +64,8 @@ function useCachedItem(props: any) {
         const className = [
           classNames.CELL,
           // 'cell',
-          ...rowTypes.map((e: string) => 'row-' + e),
-          ...colTypes.map((e: string) => 'col-' + e),
+          ...rowTypes.map((e: string) => classNames[`ROW_${e}`]),
+          ...colTypes.map((e: string) => classNames[`COL_${e}`]),
           rowIndex % 2 == 0 ? classNames.ROW_EVEN : classNames.ROW_ODD,
           colIndex % 2 == 0 ? classNames.COL_EVEN : classNames.COL_ODD,
           // colIndex % 2 == 0 ? 'col-even' : 'col-odd',
