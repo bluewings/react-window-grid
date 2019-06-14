@@ -71,8 +71,8 @@ function useRange(
       middle_v: [
         Math.max(rowMetadata.mid.range[0], overscanRowStartIndex),
         Math.min(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
-        Math.min(rowMetadata.mid.range[0], overscanRowStartIndex),
-        Math.max(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
+        rowMetadata.pre.range[1],
+        rowMetadata.post.range[0],
       ],
       // middle_v_: [
       //   Math.min(rowMetadata.mid.range[0], overscanRowStartIndex),
@@ -81,8 +81,8 @@ function useRange(
       middle_h: [
         Math.max(columnMetadata.mid.range[0], overscanColumnStartIndex),
         Math.min(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
-        Math.min(columnMetadata.mid.range[0], overscanColumnStartIndex),
-        Math.max(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
+        columnMetadata.pre.range[1],
+        columnMetadata.post.range[0],
       ],
       // middle_h_: [
       //   Math.min(columnMetadata.mid.range[0], overscanColumnStartIndex),
