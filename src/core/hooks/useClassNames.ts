@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 export type ClassNamesProps = {
+  CONTAINER?: string;
   CELL?: string;
 
   COL_ODD?: string;
@@ -30,6 +31,7 @@ export type ClassNamesProps = {
 };
 
 export type ClassNames = {
+  CONTAINER: string;
   CELL: string;
 
   COL_ODD: string;
@@ -67,6 +69,7 @@ export type ClassNames = {
 };
 
 const CLASSNAMES = {
+  CONTAINER: 'grid-container',
   CELL: 'cell',
 
   COL_ODD: 'col-odd',

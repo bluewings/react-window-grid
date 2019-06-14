@@ -118,7 +118,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
 
   const theme = useTheme(props.theme, classNames);
 
-  const containerInfo = useContainerInfo({ ...props, theme });
+  const containerInfo = useContainerInfo({ ...props, theme, classNames });
 
   const [scrollbarWidth, scrollbarHeight] = useScrollbarSize(overflow);
 
