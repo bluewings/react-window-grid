@@ -3,8 +3,8 @@ import { Metadata, ItemPosition } from './useMetadata';
 import styles from '../components/WindowGrid/WindowGrid.module.scss';
 
 function useItems(rowRange: number[], colRange: number[], getCachedStyle: Function) {
-  const [rowStartIndex, rowStopIndex] = rowRange;
-  const [columnStartIndex, columnStopIndex] = colRange;
+  const [rowStartIndex, rowStopIndex, minRowIndex, maxRowIndex] = rowRange;
+  const [colStartIndex, colStopIndex, minColIndex, maxColIndex] = colRange;
   return useMemo(() => {
     // const
 
@@ -12,20 +12,20 @@ function useItems(rowRange: number[], colRange: number[], getCachedStyle: Functi
 
     for (let rowIndex = rowStartIndex; rowIndex < rowStopIndex; rowIndex++) {
       let rowType = [];
-      if (rowIndex === rowStartIndex) {
+      if (rowIndex === minRowIndex) {
         rowType.push('first');
       }
-      if (rowIndex === rowStopIndex - 1) {
+      if (rowIndex === maxRowIndex - 1) {
         rowType.push('last');
       }
-      for (let colIndex = columnStartIndex; colIndex < columnStopIndex; colIndex++) {
+      for (let colIndex = colStartIndex; colIndex < colStopIndex; colIndex++) {
         const key = rowIndex + '_' + colIndex;
 
         let colType = [];
-        if (colIndex === columnStartIndex) {
+        if (colIndex === minColIndex) {
           colType.push('first');
         }
-        if (colIndex === columnStopIndex - 1) {
+        if (colIndex === maxColIndex - 1) {
           colType.push('last');
         }
         const { content, style } = getCachedStyle(rowIndex, colIndex, rowType, colType);
@@ -39,7 +39,7 @@ function useItems(rowRange: number[], colRange: number[], getCachedStyle: Functi
       }
     }
     return items;
-  }, [rowStartIndex, rowStopIndex, columnStartIndex, columnStopIndex, getCachedStyle]);
+  }, [rowStartIndex, rowStopIndex, colStartIndex, colStopIndex, getCachedStyle]);
 }
 
 function useRange(
@@ -52,18 +52,42 @@ function useRange(
 ) {
   return useMemo(
     () => ({
-      top: rowMetadata.pre.range,
-      bottom: rowMetadata.post.range,
-      left: columnMetadata.pre.range,
-      right: columnMetadata.post.range,
+      top: [
+        ...rowMetadata.pre.range,
+        ...rowMetadata.pre.range,
+      ],
+      bottom: [
+        ...rowMetadata.post.range,
+        ...rowMetadata.post.range,
+      ],
+      left: [
+        ...columnMetadata.pre.range,
+        ...columnMetadata.pre.range,
+      ],
+      right: [
+        ...columnMetadata.post.range,
+        ...columnMetadata.post.range,
+      ],
       middle_v: [
         Math.max(rowMetadata.mid.range[0], overscanRowStartIndex),
         Math.min(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
+        Math.min(rowMetadata.mid.range[0], overscanRowStartIndex),
+        Math.max(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
       ],
+      // middle_v_: [
+      //   Math.min(rowMetadata.mid.range[0], overscanRowStartIndex),
+      //   Math.max(rowMetadata.mid.range[1], overscanRowStopIndex + 1),
+      // ],
       middle_h: [
         Math.max(columnMetadata.mid.range[0], overscanColumnStartIndex),
         Math.min(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
+        Math.min(columnMetadata.mid.range[0], overscanColumnStartIndex),
+        Math.max(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
       ],
+      // middle_h_: [
+      //   Math.min(columnMetadata.mid.range[0], overscanColumnStartIndex),
+      //   Math.max(columnMetadata.mid.range[1], overscanColumnStopIndex + 1),
+      // ],
     }),
     [
       rowMetadata,
@@ -96,6 +120,8 @@ function useSections(
     overscanColumnStartIndex,
     overscanColumnStopIndex,
   );
+
+  console.log(range)
 
   const sections = [
     {
