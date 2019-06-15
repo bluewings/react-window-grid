@@ -126,20 +126,20 @@ function useSections(
   const sections = [
     {
       key: 'top',
-      className: `${classNames.SECTION} ${classNames.SECTION_TOP} ${styles.sticky}`,
+      className: `${classNames.SECTION} ${classNames.SECTION_TOP} ${classNames.SECTION_CENTER_H} ${styles.sticky}`,
       style: { top: 0 },
       items: useItems(range.top, range.middle_h, getCachedStyle),
     },
 
     {
       key: 'left',
-      className: `${classNames.SECTION} ${classNames.SECTION_LEFT} ${styles.sticky}`,
+      className: `${classNames.SECTION} ${classNames.SECTION_CENTER_V} ${classNames.SECTION_LEFT} ${styles.sticky}`,
       style: { left: 0 },
       items: useItems(range.middle_v, range.left, getCachedStyle),
     },
     {
       key: 'right',
-      className: `${classNames.SECTION} ${classNames.SECTION_RIGHT} ${styles.sticky}`,
+      className: `${classNames.SECTION} ${classNames.SECTION_CENTER_V} ${classNames.SECTION_RIGHT} ${styles.sticky}`,
       style: { left: contentWidth - columnMetadata.post.size, width: columnMetadata.post.size },
       items: useItems(range.middle_v, range.right, getCachedStyle),
     },
@@ -157,7 +157,7 @@ function useSections(
     },
     {
       key: 'bottom',
-      className: `${classNames.SECTION} ${classNames.SECTION_BOTTOM} ${styles.sticky}`,
+      className: `${classNames.SECTION} ${classNames.SECTION_BOTTOM} ${classNames.SECTION_CENTER_H} ${styles.sticky}`,
       style: { top: contentHeight - rowMetadata.post.size, height: rowMetadata.post.size },
       items: useItems(range.bottom, range.middle_h, getCachedStyle),
     },

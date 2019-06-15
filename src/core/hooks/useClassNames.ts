@@ -20,6 +20,8 @@ export type ClassNamesProps = {
   SECTION_RIGHT?: string;
   SECTION_BOTTOM?: string;
   SECTION_CENTER?: string;
+  SECTION_CENTER_V?: string;
+  SECTION_CENTER_H?: string;
 
   GUIDELINE?: string;
   GUIDELINE_TOP?: string;
@@ -50,6 +52,8 @@ export type ClassNames = {
   SECTION_RIGHT: string;
   SECTION_BOTTOM: string;
   SECTION_CENTER: string;
+  SECTION_CENTER_V: string;
+  SECTION_CENTER_H: string;
 
   GUIDELINE: string;
   GUIDELINE_TOP: string;
@@ -89,6 +93,8 @@ const CLASSNAMES = {
   SECTION_RIGHT: 'section-right',
   SECTION_BOTTOM: 'section-bottom',
   SECTION_CENTER: 'section-center',
+  SECTION_CENTER_V: 'section-center-v',
+  SECTION_CENTER_H: 'section-center-h',
 
   GUIDELINE: 'guideline',
   GUIDELINE_TOP: 'guideline-top',

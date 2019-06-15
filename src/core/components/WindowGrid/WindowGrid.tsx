@@ -354,7 +354,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
                 {section.items}
               </div>
             ))}
-            <div className={`${classNames.SECTION} ${classNames.SECTION_CENTER} ${styles.center}`}>{center.items}</div>
+            <div className={`${classNames.SECTION} ${classNames.SECTION_CENTER} ${classNames.SECTION_CENTER_V} ${classNames.SECTION_CENTER_H} ${styles.center}`}>{center.items}</div>
           </div>
         </div>
         {props.guideline && (
