@@ -121,8 +121,6 @@ function useSections(
     overscanColumnStopIndex,
   );
 
-  console.log(range)
-
   const sections = [
     {
       key: 'top',
