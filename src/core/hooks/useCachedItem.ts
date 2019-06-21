@@ -29,7 +29,7 @@ function useCachedItem(props: any) {
   const cached = useMemo(() => {
     cached__tmp.current = {};
 
-    console.log('%c CACHE CLEARED!!!', 'background:yellow');
+    // console.log('%c CACHE CLEARED!!!', 'background:yellow');
 
     return cached__tmp;
   }, [columnCount, columnWidth, rowCount, rowHeight, props.children, getItemMetadata]);
