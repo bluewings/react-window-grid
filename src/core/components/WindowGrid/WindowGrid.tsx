@@ -78,6 +78,7 @@ type WindowGridProps = {
   scrollSnap?: boolean;
   onScroll?: Function;
   onResize?: Function;
+  onVisibleRangeChange?: Function;
 
   defaultRowIndex?: number;
   defaultColumnIndex?: number;
@@ -113,6 +114,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
 
   const onScroll = useHandle(props.onScroll);
   const onResize = useHandle(props.onResize);
+  const onVisibleRangeChange = useHandle(props.onVisibleRangeChange);
 
   const classNames = useClassNames(props.classNames);
 
@@ -267,6 +269,20 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     visibleRowStartIndex,
     visibleRowStopIndex,
   };
+
+  useEffect(() => {
+    onVisibleRangeChange({
+      visibleColumnStartIndex,
+      visibleColumnStopIndex,
+      visibleRowStartIndex,
+      visibleRowStopIndex,
+    });
+  }, [
+    visibleColumnStartIndex,
+    visibleColumnStopIndex,
+    visibleRowStartIndex,
+    visibleRowStopIndex,
+  ])
 
   const guidelines = useGuidelines(rowMetadata, columnMetadata, clientWidth, clientHeight, classNames);
 
