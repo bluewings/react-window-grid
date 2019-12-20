@@ -35,6 +35,7 @@ type HelpersProps = {
   fillerRow?: string;
   minVisibleScrollViewWidth?: number;
   minVisibleScrollViewHeight?: number;
+  overscanDirection?: 'forward' | 'both';
 
   maxHeight?: number;
 };
@@ -214,6 +215,7 @@ function useHelpers(props: HelpersProps) {
     fillerRow,
 
     maxHeight = null,
+    overscanDirection,
   } = props;
 
   const {
@@ -372,15 +374,19 @@ function useHelpers(props: HelpersProps) {
 
   const _overscanCount = typeof overscanCount === 'number' ? overscanCount : 2;
 
+  const _overscanForward = overscanDirection == 'forward';
+
   const getRange = useMemo(() => {
     return (itemType: ItemType, offset: number, scrollDirection: ScrollDirection) => {
       const visibleStartIndex = getStartIndex(itemType, offset);
       const visibleStopIndex = getStopIndex(itemType, visibleStartIndex, offset);
-      const overscanStartIndex = visibleStartIndex - (scrollDirection === ScrollDirection.FORWARD ? 0 : _overscanCount);
-      const overscanStopIndex = visibleStopIndex + (scrollDirection === ScrollDirection.FORWARD ? _overscanCount : 0);
+      const overscanStartIndex = visibleStartIndex -
+        (_overscanForward && scrollDirection === ScrollDirection.FORWARD ? 0 : _overscanCount);
+      const overscanStopIndex = visibleStopIndex +
+        (_overscanForward && scrollDirection !== ScrollDirection.FORWARD ? 0 : _overscanCount);
       return [overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex];
     };
-  }, [getStartIndex, getStopIndex, _overscanCount]);
+  }, [getStartIndex, getStopIndex, _overscanCount, _overscanForward]);
 
   return {
     getItemMetadata,

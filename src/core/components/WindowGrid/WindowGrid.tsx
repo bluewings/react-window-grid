@@ -62,6 +62,7 @@ type WindowGridProps = {
   fixedRightCount?: number;
   fixedBottomCount?: number;
   overscanCount?: number;
+  overscanDirection?: 'forward' | 'both';
 
   fillerColumn?: FillerType | string;
   fillerRow?: FillerType | string;
@@ -131,6 +132,7 @@ const WindowGrid: FunctionComponent<WindowGridProps> = (props, ref) => {
     innerHeight: containerInfo.innerHeight,
     scrollbarWidth,
     scrollbarHeight,
+    overscanDirection: props.overscanDirection || 'forward',
   });
 
   // console.log('helpers', helpers)
