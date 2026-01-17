@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react';
-import { css } from 'emotion';
+import { css } from '@emotion/css';
 import useComputedStyle from './useComputedStyle';
 // import { ThemeFunction } from './useTheme';
 // import styles from '../components/WindowGrid/WindowGrid.module.scss';

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { css } from 'emotion';
+import { css } from '@emotion/css';
 import { ClassNames } from './useClassNames';
 
 export type ThemeFunction = (classNames: ClassNames) => StringAnyMap;

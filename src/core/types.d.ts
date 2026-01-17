@@ -1,25 +1,25 @@
-/// <reference types="react-scripts" />
+import { MutableRefObject } from 'react';
 
 declare module '*.scss' {
   const classes: { [key: string]: string };
   export default classes;
 }
 
-declare module '*.pug' {
-  export default function(params?: { [key: string]: any });
+declare global {
+  interface StringTMap<T> {
+    [key: string]: T;
+  }
+  interface NumberTMap<T> {
+    [key: number]: T;
+  }
+
+  interface StringAnyMap extends StringTMap<any> {}
+  interface NumberAnyMap extends NumberTMap<any> {}
+
+  interface StringFunctionMap extends StringTMap<Function> {}
+  interface NumberFunctionMap extends NumberTMap<Function> {}
+
+  type HTMLElementRef = MutableRefObject<HTMLElement | null>;
 }
 
-declare interface StringTMap<T> {
-  [key: string]: T;
-}
-declare interface NumberTMap<T> {
-  [key: number]: T;
-}
-
-declare interface StringAnyMap extends StringTMap<any> {}
-declare interface NumberAnyMap extends NumberTMap<any> {}
-
-declare interface StringFunctionMap extends StringTMap<Function> {}
-declare interface NumberFunctionMap extends NumberTMap<Function> {}
-
-declare type HTMLElementRef = MutableRefObject<HTMLElement | null>;
+export {};
